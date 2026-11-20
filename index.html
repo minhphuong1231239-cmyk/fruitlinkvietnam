@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FruitLink Vietnam</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;text-align:center;background:linear-gradient(160deg,#d7ffe1,#fff6bc);color:#24623a}
+h1{font-size:27px;margin:24px 0 8px}
+p{font-size:15px}
+.stats{display:flex;justify-content:space-evenly;margin:20px auto;font-size:19px;font-weight:bold}
+#board{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;max-width:390px;padding:8px;margin:auto}
+.tile{aspect-ratio:1;background:white;border:2px solid #a2dfb3;border-radius:12px;font-size:clamp(24px,7vw,37px);display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation}
+.tile.selected{background:#ffe88a;border:3px solid #ff9b00;transform:scale(1.06)}
+button{margin:22px;padding:13px 26px;border:0;border-radius:25px;background:#27a453;color:white;font-size:18px;font-weight:bold}
+#message{min-height:24px;font-weight:bold}
+</style>
+</head>
+<body>
+<h1>🍓 FruitLink Vietnam 🍇</h1>
+<p>LIÊN KẾT TRÁI CÂY</p>
+<div class="stats">
+<span>⭐ Điểm: <span id="score">0</span></span>
+<span>⏱️ <span id="time">90</span> giây</span>
+</div>
+<p>Chạm vào 2 trái giống nhau để liên kết!</p>
+<div id="board"></div>
+<p id="message">Chúc bạn chơi vui!</p>
+<button onclick="start()">🔄 Chơi lại</button>
+<script>
+const fruits=["🍎","🍊","🍋","🍇","🍓","🍉"];
+let cells=[],selected=-1,score=0,time=90,timer=null,playing=false;
+const board=document.getElementById("board");
+const rand=()=>Math.floor(Math.random()*fruits.length);
+function draw(){
+board.innerHTML="";
+cells.forEach((fruit,i)=>{
+const tile=document.createElement("div");
+tile.className="tile"+(i===selected?" selected":"");
+tile.textContent=fruit;
+tile.onclick=()=>choose(i);
+board.appendChild(tile);
+});
+}
+function choose(i){
+if(!playing)return;
+if(selected===-1){selected=i;draw();return;}
+if(selected===i){selected=-1;draw();return;}
+if(cells[i]===cells[selected]){
+score+=10;
+document.getElementById("score").textContent=score;
+cells[i]=fruits[rand()];
+cells[selected]=fruits[rand()];
+document.getElementById("message").textContent="🎉 Tuyệt vời! +10 điểm";
+}else{
+document.getElementById("message").textContent="Thử chọn 2 trái giống nhau nhé!";
+}
+selected=-1;draw();
+}
+function start(){
+clearInterval(timer);
+cells=Array.from({length:36},()=>fruits[rand()]);
+selected=-1;score=0;time=90;playing=true;
+document.getElementById("score").textContent=0;
+document.getElementById("time").textContent=time;
+document.getElementById("message").textContent="Bắt đầu nào!";
+draw();
+timer=setInterval(()=>{
+time--;
+document.getElementById("time").textContent=time;
+if(time<=0){
+clearInterval(timer);playing=false;
+document.getElementById("message").textContent="🏆 Hết giờ! Bạn đạt "+score+" điểm!";
+}
+},1000);
+}
+start();
+</script>
+</body>
+</html>

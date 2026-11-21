@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#8d2f83">
+  <title>FruitLink Vietnam · Công chúa 3D chúc mừng</title>
+  <style>
+    *{box-sizing:border-box}
+    html{background:#2b123e}
+    body{margin:0;min-height:100svh;font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;color:#fff7fa;background:radial-gradient(ellipse at 55% 16%,#ad60bf 0,#592f87 46%,#28133f 100%);overflow-x:hidden}
+    .wrap{width:min(100%,480px);min-height:100svh;margin:auto;padding:calc(env(safe-area-inset-top) + 12px) 15px calc(env(safe-area-inset-bottom) + 18px);display:flex;flex-direction:column;align-items:center}
+    .top{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .top a{color:#fff6d5;text-decoration:none;border:1px solid #ffdf9b66;border-radius:10px;padding:7px 10px;font-size:12px;background:#ffffff1d}
+    .top b{font-size:13px;color:#fff1a0;letter-spacing:.3px}
+    h1{font-size:clamp(22px,6.4vw,29px);margin:17px 0 2px;text-align:center;line-height:1.2;color:#ffe6a0;text-shadow:0 2px 10px #b71b91}
+    .sub{margin:0 0 13px;text-align:center;color:#fbe8ff;font-size:13px}
+    .stage{position:relative;flex:1;width:100%;min-height:390px;max-height:550px;border:2px solid #ffe6a9;border-radius:25px;overflow:hidden;background:radial-gradient(ellipse at 50% 55%,#ffeac494 0,#f391bf55 30%,transparent 75%),linear-gradient(#7742af,#e18dbc 57%,#b069b5);box-shadow:0 10px 30px #09001e99,inset 0 0 35px #ffebca80;isolation:isolate}
+    .stage:before{content:"🌸 🌸 ✦ 🌸 ✦ 🌸 🌸";position:absolute;top:4%;left:0;right:0;text-align:center;font-size:26px;filter:drop-shadow(0 0 8px gold);letter-spacing:6px;opacity:.88}
+    .stage:after{content:"🏰";position:absolute;top:36%;left:-28px;font-size:86px;opacity:.17;filter:blur(1px)}
+    .saying{position:absolute;left:6%;right:6%;top:18px;z-index:10;min-height:62px;text-align:center;border-radius:21px;padding:10px 13px;background:#fff7e8f2;color:#7a2555;box-shadow:0 5px 13px #3d0f5c7d;font-size:clamp(14px,3.9vw,17px);font-weight:800;border:2px solid #ffcc91}
+    .character-wrap{position:absolute;width:min(62%,244px);aspect-ratio:220/300;top:23%;left:50%;transform:translateX(-50%);filter:drop-shadow(0 14px 8px #451a6ca0);z-index:3;transform-origin:center bottom;animation:breath 2.9s ease-in-out infinite}
+    .character{position:absolute;inset:0;background-image:url("./gift-characters.svg");background-size:300% 200%;background-position:100% 0%;background-repeat:no-repeat;border-radius:90px 90px 26px 26px;-webkit-mask-image:linear-gradient(#000 0%,#000 78%,transparent);mask-image:linear-gradient(#000 0%,#000 78%,transparent)}
+    .coronet{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:49px;filter:drop-shadow(0 2px 6px #c58a11)}
+    .mouth-cover{position:absolute;top:59%;left:50%;width:39px;height:25px;transform:translateX(-50%);border-radius:45%;background:radial-gradient(ellipse at center,#ffdfcd,#ebaf9c);opacity:0;display:flex;align-items:center;justify-content:center}
+    .mouth{width:23px;height:8px;background:#963c5e;border-radius:5px 5px 90% 90%;transform-origin:top center}
+    .talking .character-wrap{animation:talk-head .8s ease-in-out infinite alternate}
+    .talking .mouth-cover{opacity:1}
+    .talking .mouth{animation:talk-mouth .17s ease-in-out infinite alternate}
+    .gift{position:absolute;left:50%;bottom:7%;z-index:7;font-size:clamp(80px,23vw,113px);transform:translateX(-50%);filter:drop-shadow(0 0 15px #ffed7f);animation:gift-dance 2.8s ease-in-out infinite}
+    .ring{position:absolute;bottom:7%;left:50%;width:75%;aspect-ratio:2/1;border:3px solid #ffde88;border-radius:50%;transform:translateX(-50%) rotate(-9deg);box-shadow:0 0 20px #fff7bc,inset 0 0 20px #fff7c2;opacity:.8;z-index:2;animation:ring 2.5s ease-in-out infinite}
+    .spark{position:absolute;pointer-events:none;z-index:6;text-shadow:0 0 12px #fff,0 0 24px #ffd257;animation:twinkle 2.5s ease-in-out infinite}
+    .spark.one{left:13%;top:40%;font-size:31px}
+    .spark.two{right:12%;top:48%;font-size:25px;animation-delay:.7s}
+    .spark.three{left:27%;bottom:18%;font-size:25px;animation-delay:1.2s}
+    .spark.four{right:25%;bottom:25%;font-size:34px;animation-delay:1.5s}
+    .talking .gift{animation:gift-excited .5s ease-in-out infinite alternate}
+    .controls{width:100%;display:grid;gap:9px;margin-top:13px}
+    button{border:0;border-radius:14px;padding:15px 12px;font:800 16px system-ui,-apple-system,sans-serif;min-height:53px;cursor:pointer}
+    #play{background:linear-gradient(120deg,#ffdb65,#ffc078);color:#5b2d3e;box-shadow:0 4px 0 #b8784c}
+    #again{background:#fff4fbeb;color:#69315c;border:1px solid #f5ccff;font-size:14px;min-height:44px;padding:9px}
+    .note{font-size:11px;color:#f6d8ef;margin:10px 0 0;text-align:center;max-width:380px}
+    #status{font-size:12px;min-height:18px;text-align:center;color:#fff2c6}
+    @keyframes breath{0%,100%{transform:translateX(-50%) translateY(0) scale(1)}50%{transform:translateX(-50%) translateY(-5px) scale(1.013)}}
+    @keyframes talk-head{from{transform:translateX(-50%) rotate(-2deg) translateY(0)}to{transform:translateX(-50%) rotate(2deg) translateY(-6px)}}
+    @keyframes talk-mouth{0%{transform:scaleY(.25)}100%{transform:scaleY(2.3)}}
+    @keyframes gift-dance{0%,100%{transform:translateX(-50%) rotate(-6deg) scale(.95)}50%{transform:translateX(-50%) rotate(6deg) scale(1.09)}}
+    @keyframes gift-excited{from{transform:translateX(-50%) rotate(-7deg) scale(1.03)}to{transform:translateX(-50%) rotate(8deg) scale(1.14)}}
+    @keyframes ring{0%,100%{opacity:.45;transform:translateX(-50%) scale(.85) rotate(-9deg)}50%{opacity:1;transform:translateX(-50%) scale(1.06) rotate(-9deg)}}
+    @keyframes twinkle{0%,100%{opacity:.32;transform:translateY(0) scale(.75) rotate(-20deg)}50%{opacity:1;transform:translateY(-12px) scale(1.3) rotate(25deg)}}
+    @media (max-height:680px){h1{margin-top:5px}.sub{margin-bottom:7px}.stage{min-height:300px}.saying{font-size:13px;padding:7px;min-height:48px}.character-wrap{top:21%;width:min(58%,206px)}.gift{font-size:75px;bottom:3%}.ring{bottom:3%}}
+    @media (prefers-reduced-motion:reduce){.character-wrap,.gift,.ring,.spark{animation-duration:4s}.talking .mouth{animation-duration:.35s}}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top"><a href="./">‹ Về game FruitLink</a><b>🎁 BẢN THỬ 3D</b></div>
+  <h1>👑 Công chúa tặng quà</h1>
+  <p class="sub">Bấm nút để xem nhân vật cử động và nghe lời chúc.</p>
+  <section class="stage" id="stage" aria-label="Công chúa 3D tặng quà">
+    <div class="saying" id="message" aria-live="polite">Chúc mừng bạn! Chúc bạn thật nhiều may mắn nhé! ✨</div>
+    <div class="character-wrap"><div class="character"></div><div class="coronet">👑</div><div class="mouth-cover"><div class="mouth"></div></div></div>
+    <div class="ring"></div><div class="spark one">✦</div><div class="spark two">✦</div><div class="spark three">🌸</div><div class="spark four">✧</div>
+    <div class="gift" aria-hidden="true">🎁</div>
+  </section>
+  <div class="controls">
+    <button id="play" type="button">🔊 BẤM ĐỂ CÔNG CHÚA NÓI</button>
+    <button id="again" type="button">🎉 Đổi lời chúc và nghe thử</button>
+    <div id="status" role="status">Giọng nói dùng chức năng đọc tiếng Việt của điện thoại.</div>
+  </div>
+  <p class="note">Đây là bản xem thử miễn phí trên điện thoại: ảnh 3D chuyển động bằng hiệu ứng và đọc lời chúc bằng giọng máy. Chưa phải video AI có khớp khẩu hình hoàn toàn; game chính giữ nguyên.</p>
+</main>
+<script>
+(function(){
+  'use strict';
+  var messages=[
+    'Chúc mừng bạn! Chúc bạn thật nhiều may mắn nhé!',
+    'Tặng bạn món quà nhỏ. Chúc bạn luôn vui vẻ và hạnh phúc!',
+    'Bạn giỏi quá! Chúc bạn gặp thật nhiều điều tốt đẹp!',
+    'Cảm ơn bạn đã chơi cùng chúng mình. Chúc bạn một ngày thật vui!'
+  ];
+  var idx=0;
+  var stage=document.getElementById('stage');
+  var msg=document.getElementById('message');
+  var status=document.getElementById('status');
+  var play=document.getElementById('play');
+  var again=document.getElementById('again');
+  var synth=window.speechSynthesis;
+  var speaking=false;
+  function setTalking(on){
+    speaking=on;
+    stage.classList.toggle('talking',on);
+    play.textContent=on?'🎤 ĐANG NÓI... BẤM ĐỂ NGHE LẠI':'🔊 BẤM ĐỂ CÔNG CHÚA NÓI';
+  }
+  function say(){
+    msg.textContent='✨ '+messages[idx]+' ✨';
+    if(!window.SpeechSynthesisUtterance||!synth){
+      status.textContent='Trình duyệt chưa hỗ trợ tiếng nói. Bạn vẫn có thể đọc lời chúc ở phía trên.';
+      return;
+    }
+    try{
+      synth.cancel();
+      var sentence=new SpeechSynthesisUtterance(messages[idx]);
+      sentence.lang='vi-VN';sentence.rate=.87;sentence.pitch=1.08;sentence.volume=1;
+      var voices=synth.getVoices();
+      var vi=voices.filter(function(v){return /^vi\b/i.test(v.lang||'');});
+      if(vi.length){sentence.voice=vi.find(function(v){return /female|nữ|linh|mai|an|huong|hương|thao|thảo|lan/i.test(v.name);})||vi[0];}
+      sentence.onstart=function(){setTalking(true);status.textContent='Công chúa đang chúc mừng bạn...';};
+      sentence.onend=function(){setTalking(false);status.textContent='Đã đọc lời chúc. Bấm nút để nghe lại nhé!';};
+      sentence.onerror=function(){setTalking(false);status.textContent='Chưa phát được giọng nói. Hãy thử mở bằng Safari và bật âm lượng iPhone.';};
+      setTalking(true);
+      status.textContent='Đang phát lời chúc tiếng Việt...';
+      synth.speak(sentence);
+      if(synth.paused)synth.resume();
+    }catch(e){
+      setTalking(false);status.textContent='Không phát được giọng đọc trên trình duyệt này. Hãy thử Safari.';
+    }
+  }
+  play.addEventListener('click',say);
+  again.addEventListener('click',function(){idx=(idx+1)%messages.length;say();});
+  document.addEventListener('visibilitychange',function(){if(document.hidden&&synth){synth.cancel();setTalking(false);}});
+})();
+</script>
+</body>
+</html>

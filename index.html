@@ -175,7 +175,7 @@ body[data-mode="watch"] .invite-card,body[data-mode="watch"] .hero,body[data-mod
   <div class="invite-top"><div><h3>🤝 Mời bạn chơi cùng</h3><p id="inviteHint">Mời bạn bè chơi cùng thử thách 49 ô để so điểm.</p></div><button id="inviteBtn" class="secondary" type="button">📨 Mời bạn</button></div>
   <div id="inviteDetails" class="invite-detail hidden"><div class="hint">Mã thử thách: <span class="invite-code" id="inviteCode"></span></div><input id="inviteLink" class="invite-link" readonly aria-label="Đường dẫn mời chơi" title="Đường dẫn mời bạn chơi"><div class="invite-controls"><button type="button" id="shareInviteBtn" class="secondary">📤 Gửi lời mời</button><button type="button" id="copyInviteBtn" class="secondary">📋 Sao chép link</button></div><p class="note">Hai người chơi cùng bố cục trái cây theo mã mời. Điểm số chưa đồng bộ trực tuyến giữa các máy.</p></div>
  </section>
- <section id="playerView" class="card"><div id="welcome"><h3>🌟 Sẵn sàng chơi nào!</h3><p class="hint">Mỗi lượt gồm <b>20 giây chuẩn bị · 20 giây chơi · 15 giây nghỉ.</b> Bàn 7 × 7 có lá cờ Việt Nam ở giữa và 48 trái cây xung quanh. Ghép 3 trái giống nhau được 1 điểm. Ghép đủ 16 bộ là về đích.</p><label for="name">Tên người chơi (không bắt buộc)</label><input id="name" class="input" maxlength="16" placeholder="Ví dụ: Nhà vườn vui" autocomplete="nickname"><button class="primary" id="startBtn">▶ Bắt đầu chơi thử</button><div class="info">🎵 Nhạc nền sáo êm, âm lượng nhỏ. Chạm trái có tiếng riêng; ghép đủ 3 trái đúng sẽ nghe “Bing Bong”.</div></div><div id="readyView" class="center hidden"><h3>🌾 Chuẩn bị vào vườn!</h3><p class="hint">Sắp đến lượt hái trái rồi!</p><div class="big">🎋🪈🍓</div><div id="bigClock" class="countbig">20</div><p class="hint">Sẵn sàng ghép ba trái cùng loại nhé.</p><button id="skipBtn" class="secondary">Vào chơi ngay</button></div><div id="gameView" class="hidden"><div id="board" class="board" role="group" aria-label="Bàn trái cây"></div><div id="prompt" class="prompt" aria-live="polite">Chạm 3 trái cùng loại để được +1 điểm!</div></div><div id="breakView" class="center hidden"><h3>🎉 Nghỉ 15 giây – Nhận quà!</h3><div class="big">🎁🍍🌺</div><div id="breakScore" style="font-size:22px;font-weight:800">Bạn được 0 điểm!</div><p class="hint">Người xem có thể thử gửi quà minh họa ở bên 👁️.</p><button id="nextBtn" class="secondary">Chuẩn bị vòng tiếp theo</button><button id="shareScoreBtn" class="secondary" type="button" style="display:block;width:100%;margin-top:10px">📤 Gửi kết quả cho bạn bè</button></div></section>
+ <section id="playerView" class="card"><div id="welcome"><h3>🌟 Sẵn sàng chơi nào!</h3><p class="hint">Mỗi lượt gồm <b>20 giây chuẩn bị · 20 giây chơi · 15 giây nghỉ.</b> Bàn 7 × 7 có lá cờ Việt Nam ở giữa và 48 trái cây xung quanh. Ghép 3 trái giống nhau được 1 điểm. Ghép đủ 16 bộ là về đích.</p><label for="name">Tên người chơi (không bắt buộc)</label><input id="name" class="input" maxlength="16" placeholder="Ví dụ: Nhà vườn vui" autocomplete="nickname"><button class="primary" id="startBtn">▶ Bắt đầu chơi thử</button><div class="info">🎵 Nhạc nền sáo êm, âm lượng nhỏ. Ghép đúng 3 trái, bạn sẽ nghe tiếng cắn giòn rồi đến “Bing Bong” báo điểm.</div></div><div id="readyView" class="center hidden"><h3>🌾 Chuẩn bị vào vườn!</h3><p class="hint">Sắp đến lượt hái trái rồi!</p><div class="big">🎋🪈🍓</div><div id="bigClock" class="countbig">20</div><p class="hint">Sẵn sàng ghép ba trái cùng loại nhé.</p><button id="skipBtn" class="secondary">Vào chơi ngay</button></div><div id="gameView" class="hidden"><div id="board" class="board" role="group" aria-label="Bàn trái cây"></div><div id="prompt" class="prompt" aria-live="polite">Chạm 3 trái cùng loại để được +1 điểm!</div></div><div id="breakView" class="center hidden"><h3>🎉 Nghỉ 15 giây – Nhận quà!</h3><div class="big">🎁🍍🌺</div><div id="breakScore" style="font-size:22px;font-weight:800">Bạn được 0 điểm!</div><p class="hint">Người xem có thể thử gửi quà minh họa ở bên 👁️.</p><button id="nextBtn" class="secondary">Chuẩn bị vòng tiếp theo</button><button id="shareScoreBtn" class="secondary" type="button" style="display:block;width:100%;margin-top:10px">📤 Gửi kết quả cho bạn bè</button></div></section>
  <section id="watchView" class="card hidden" aria-label="Khán đài người xem">
    <div class="watch-status"><strong>Khán đài · Phòng 1</strong><span id="watchStatus">Sẵn sàng</span><b><span id="watchTime">20</span>s</b></div>
    <div id="recipientPanel">
@@ -290,8 +290,49 @@ body[data-mode="watch"] .invite-card,body[data-mode="watch"] .hero,body[data-mod
  function fallbackMusic(){recordedPlaying=false;musicStop()}
  function musicStart(){if(muted||phase==='home'){musicStop();return}createAudio();if(!ctx||!musicGain)return;if(ctx.state==='suspended')ctx.resume().catch(()=>{});musicGain.gain.value=.11;if(!musicTimer){musicNote();musicTimer=setInterval(musicNote,460)}}
  function musicStop(){recordedPlaying=false;clearInterval(musicTimer);musicTimer=null;if(musicGain)musicGain.gain.value=0}
- function synthesizedTing(){if(!ctx||muted)return;let n=ctx.currentTime;[[659,.32,0,.13],[880,.36,.18,.13],[1175,.62,.38,.13],[1568,.4,.5,.045]].forEach(([f,d,t,v])=>tone(f,n+t,d,v,'sine',effectGain))}
- function ting(){if(muted)return;createAudio();if(ctx)synthesizedTing()}
+ let biteBuffer;
+ function makeBiteBuffer(){
+   const rate=ctx.sampleRate;
+   const buffer=ctx.createBuffer(1,Math.ceil(rate*.19),rate);
+   const samples=buffer.getChannelData(0);
+   // A firm initial snap followed by shorter, softer crackles.
+   const cracks=[[0,.83,.014],[.016,.49,.009],[.035,.56,.012],
+                [.062,.37,.009],[.087,.3,.013],[.119,.22,.009],[.14,.13,.007]];
+   for(const [delay,level,decay] of cracks){
+     const start=Math.round(delay*rate);
+     const length=Math.min(samples.length-start,Math.ceil(decay*5*rate));
+     let low=0,high=0;
+     const upper=1-Math.exp(-2*Math.PI*(4200-10000*delay)/rate);
+     const lower=1-Math.exp(-2*Math.PI*470/rate);
+     for(let i=0;i<length;i++){
+       const t=i/rate;
+       high+=upper*(Math.random()*2-1-high);
+       low+=lower*(high-low);
+       const grain=(high-low)*1.8;
+       const snap=.38*Math.sin(2*Math.PI*(790*t+9*(1-Math.exp(-t/.006))));
+       const envelope=Math.min(1,t/.0008)*Math.exp(-t/decay);
+       samples[start+i]+=level*envelope*(grain+snap);
+     }
+   }
+   let peak=0;
+   for(const sample of samples)peak=Math.max(peak,Math.abs(sample));
+   const level=.6/Math.max(.6,peak);
+   for(let i=0;i<samples.length;i++)samples[i]*=level;
+   return buffer;
+ }
+ function playMatchSound(){
+   if(!ctx||muted)return;
+   if(!biteBuffer)biteBuffer=makeBiteBuffer();
+   const now=ctx.currentTime;
+   const bite=ctx.createBufferSource();
+   bite.buffer=biteBuffer;
+   bite.connect(effectGain);
+   bite.start(now);
+   const chimeStart=now+biteBuffer.duration;
+   for(const [freq,duration,delay,volume] of [[659,.32,0,.13],[880,.36,.18,.13],[1175,.62,.38,.13],[1568,.4,.5,.045]]){
+     tone(freq,chimeStart+delay,duration,volume,'sine',effectGain);
+   }
+ }
  function linkSound(){
    if(!ctx||muted)return;
    const now=ctx.currentTime,osc=ctx.createOscillator(),gain=ctx.createGain();
@@ -389,7 +430,7 @@ body[data-mode="watch"] .invite-card,body[data-mode="watch"] .hero,body[data-mod
    }
    board.appendChild(layer);
  }
- function pick(i){if(phase!=='play'||locked||score===GROUPS_PER_BOARD||!cells[i]||selected.includes(i))return;createAudio();if(ctx&&!muted&&ctx.state==='suspended')ctx.resume().catch(()=>{});selected.push(i);lightTap();if(selected.length>1)linkSound();drawBoard();if(selected.length<3){$('prompt').textContent='Đã chọn '+selected.length+'/3 trái • tìm cùng loại nhé';return}const activeCells=cells;let triple=[...selected];let win=triple.every(x=>cells[x]===cells[triple[0]]);locked=true;if(win){$('board').querySelector('.fruit-links')?.classList.add('linked');score+=1;const finishedNow=score===GROUPS_PER_BOARD;if(finishedNow)registerFinish('you');best=Math.max(totalYou(),best);save('fruitlink.best.v2',best);$('prompt').textContent='🎉 Bing Bong! +1 điểm, ba trái biến mất';ting();updateText();triple.forEach(j=>boardTile(j,'matched'));setTimeout(()=>{if(cells!==activeCells)return;triple.forEach(j=>cells[j]=null);selected=[];locked=false;drawBoard();if(finishedNow)$('prompt').textContent='🏆 Đủ 16 bộ ba! Thưởng về đích: +'+bonusYou+' điểm'},320)}else{$('prompt').textContent='Ba trái chưa giống nhau. Các trái sẽ hiện lại!';triple.forEach(j=>boardTile(j,'wrong'));setTimeout(()=>{if(cells!==activeCells)return;selected=[];locked=false;drawBoard()},220)}}
+ function pick(i){if(phase!=='play'||locked||score===GROUPS_PER_BOARD||!cells[i]||selected.includes(i))return;createAudio();if(ctx&&!muted&&ctx.state!=='running'&&ctx.state!=='closed')ctx.resume().catch(()=>{});selected.push(i);lightTap();if(selected.length>1)linkSound();drawBoard();if(selected.length<3){$('prompt').textContent='Đã chọn '+selected.length+'/3 trái • tìm cùng loại nhé';return}const activeCells=cells;let triple=[...selected];let win=triple.every(x=>cells[x]===cells[triple[0]]);locked=true;if(win){$('board').querySelector('.fruit-links')?.classList.add('linked');score+=1;const finishedNow=score===GROUPS_PER_BOARD;if(finishedNow)registerFinish('you');best=Math.max(totalYou(),best);save('fruitlink.best.v2',best);$('prompt').textContent='🎉 Bing Bong! +1 điểm, ba trái biến mất';playMatchSound();updateText();triple.forEach(j=>boardTile(j,'matched'));setTimeout(()=>{if(cells!==activeCells)return;triple.forEach(j=>cells[j]=null);selected=[];locked=false;drawBoard();if(finishedNow)$('prompt').textContent='🏆 Đủ 16 bộ ba! Thưởng về đích: +'+bonusYou+' điểm'},320)}else{$('prompt').textContent='Ba trái chưa giống nhau. Các trái sẽ hiện lại!';triple.forEach(j=>boardTile(j,'wrong'));setTimeout(()=>{if(cells!==activeCells)return;selected=[];locked=false;drawBoard()},220)}}
  function boardTile(i,cls){$('board').children[i]?.classList.add(cls)}
  function begin(p){phase=p;remaining=DUR[p];endAt=Date.now()+remaining*1000;if(p==='ready'){score=0;bots=Array(9).fill(0);bonusYou=0;bonusBots=Array(9).fill(0);finishOrder=[];roundSaved=false;botTicks=0;lastBotSecond=-1;initCells();$('prompt').textContent='Chạm 3 trái giống nhau để được +1 điểm!';}if(p==='play'){drawBoard()}if(p==='break'){recordRound();save('fruitlink.best.v2',best);$('breakScore').textContent=name+' được '+totalYou()+' điểm (trong đó thưởng về đích '+bonusYou+')!';}showPhase();musicStart()}
  function next(){if(phase==='ready'){begin('play');return}if(phase==='play'){begin('break');return}if(phase==='break'){round++;begin('ready');return}}

@@ -347,32 +347,6 @@ body[data-mode="watch"] .invite-card,body[data-mode="watch"] .hero,body[data-mod
      tone(freq,chimeStart+delay,duration,volume,'sine',effectGain);
    }
  }
- let zapTexture;
- function playRay(){
-   if(!ctx||muted)return;
-   const now=ctx.currentTime;
-   if(!zapTexture){
-     const n=Math.ceil(ctx.sampleRate*.05);
-     zapTexture=ctx.createBuffer(1,n,ctx.sampleRate);
-     const samples=zapTexture.getChannelData(0);
-     for(let i=0;i<n;i++)samples[i]=(Math.random()*2-1)*Math.exp(-5*i/n);
-   }
-   for(const delay of [0,.045]){
-     const grain=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),gain=ctx.createGain();
-     grain.buffer=zapTexture;filter.type='bandpass';filter.frequency.value=1800;
-     gain.gain.value=.14;
-     grain.connect(filter);filter.connect(gain);gain.connect(effectGain);
-     grain.start(now+delay);
-   }
-   const ray=ctx.createOscillator(),env=ctx.createGain(),at=now+.055;
-   ray.frequency.setValueAtTime(650,at);
-   ray.frequency.exponentialRampToValueAtTime(1480,at+.06);
-   ray.frequency.exponentialRampToValueAtTime(830,at+.14);
-   env.gain.setValueAtTime(.0001,at);
-   env.gain.linearRampToValueAtTime(.065,at+.015);
-   env.gain.exponentialRampToValueAtTime(.0001,at+.145);
-   ray.connect(env);env.connect(effectGain);ray.start(at);ray.stop(at+.15);
- }
  function updateSound(){
    const playing=!muted&&!backgroundMusic.paused;
    const button=$('soundBtn');
@@ -488,7 +462,7 @@ body[data-mode="watch"] .invite-card,body[data-mode="watch"] .hero,body[data-mod
    }
    board.appendChild(layer);
  }
- function pick(i){if(phase!=='play'||locked||score===GROUPS_PER_BOARD||!cells[i]||selected.includes(i))return;createAudio();if(ctx&&!muted&&ctx.state!=='running'&&ctx.state!=='closed')ctx.resume().catch(()=>{});selected.push(i);playRay();drawBoard();if(selected.length<3){$('prompt').textContent='Đã chọn '+selected.length+'/3 trái • tìm cùng loại nhé';return}const activeCells=cells;let triple=[...selected];let win=triple.every(x=>cells[x]===cells[triple[0]]);locked=true;if(win){$('board').querySelector('.fruit-links')?.classList.add('linked');score+=1;const finishedNow=score===GROUPS_PER_BOARD;if(finishedNow)registerFinish('you');best=Math.max(totalYou(),best);save('fruitlink.best.v2',best);$('prompt').textContent='🎉 Bing Bong! +1 điểm, ba trái biến mất';playMatchSound();updateText();triple.forEach(j=>boardTile(j,'matched'));setTimeout(()=>{if(cells!==activeCells)return;triple.forEach(j=>cells[j]=null);selected=[];locked=false;drawBoard();if(finishedNow)$('prompt').textContent='🏆 Đủ 16 bộ ba! Thưởng về đích: +'+bonusYou+' điểm'},320)}else{$('prompt').textContent='Ba trái chưa giống nhau. Các trái sẽ hiện lại!';triple.forEach(j=>boardTile(j,'wrong'));setTimeout(()=>{if(cells!==activeCells)return;selected=[];locked=false;drawBoard()},220)}}
+ function pick(i){if(phase!=='play'||locked||score===GROUPS_PER_BOARD||!cells[i]||selected.includes(i))return;createAudio();if(ctx&&!muted&&ctx.state!=='running'&&ctx.state!=='closed')ctx.resume().catch(()=>{});selected.push(i);drawBoard();if(selected.length<3){$('prompt').textContent='Đã chọn '+selected.length+'/3 trái • tìm cùng loại nhé';return}const activeCells=cells;let triple=[...selected];let win=triple.every(x=>cells[x]===cells[triple[0]]);locked=true;if(win){$('board').querySelector('.fruit-links')?.classList.add('linked');score+=1;const finishedNow=score===GROUPS_PER_BOARD;if(finishedNow)registerFinish('you');best=Math.max(totalYou(),best);save('fruitlink.best.v2',best);$('prompt').textContent='🎉 Bing Bong! +1 điểm, ba trái biến mất';playMatchSound();updateText();triple.forEach(j=>boardTile(j,'matched'));setTimeout(()=>{if(cells!==activeCells)return;triple.forEach(j=>cells[j]=null);selected=[];locked=false;drawBoard();if(finishedNow)$('prompt').textContent='🏆 Đủ 16 bộ ba! Thưởng về đích: +'+bonusYou+' điểm'},320)}else{$('prompt').textContent='Ba trái chưa giống nhau. Các trái sẽ hiện lại!';triple.forEach(j=>boardTile(j,'wrong'));setTimeout(()=>{if(cells!==activeCells)return;selected=[];locked=false;drawBoard()},220)}}
  function boardTile(i,cls){$('board').children[i]?.classList.add(cls)}
  function begin(p){phase=p;remaining=DUR[p];endAt=Date.now()+remaining*1000;if(p==='ready'){score=0;bots=Array(9).fill(0);bonusYou=0;bonusBots=Array(9).fill(0);finishOrder=[];roundSaved=false;botTicks=0;lastBotSecond=-1;initCells();$('prompt').textContent='Chạm 3 trái giống nhau để được +1 điểm!';}if(p==='play'){drawBoard()}if(p==='break'){recordRound();save('fruitlink.best.v2',best);$('breakScore').textContent=name+' được '+totalYou()+' điểm (trong đó thưởng về đích '+bonusYou+')!';}showPhase()}
  function next(){if(phase==='ready'){begin('play');return}if(phase==='play'){begin('break');return}if(phase==='break'){round++;begin('ready');return}}

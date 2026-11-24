@@ -129,8 +129,14 @@ body[data-phase="play"] .board{max-width:calc(100vw - 10px);margin:2px auto}
 @keyframes gift-firework-burst{0%,7%{transform:scale(.1) rotate(0);opacity:0}33%{transform:scale(1.4) rotate(100deg);opacity:1}67%{transform:scale(2.3) rotate(170deg);opacity:.82}100%{transform:scale(3.1) rotate(260deg);opacity:0}}
 @keyframes gift-petal-fall{0%{transform:translateY(-15px) rotate(0deg);opacity:0}10%{opacity:1}80%{opacity:1}100%{transform:translate(30px,170px) rotate(340deg);opacity:0}}
 @media(prefers-reduced-motion:reduce){.gift-ring,.gift-firework,.gift-petal{animation:none!important}}
-/* 3D still portraits; keep existing parcel, treasure and fireworks movement. */
-.gift-actor.portrait-3d{animation:none!important}
+@media (prefers-reduced-motion:no-preference){
+  .gift-actor.portrait-3d{transform-origin:55% 90%;animation:gift-arrival .65s cubic-bezier(.18,.65,.3,1) both}
+  .gift-actor.portrait-3d::after{content:"";position:absolute;inset:0;background:var(--gift-motion) center/100% 100% no-repeat}
+}
+@keyframes gift-arrival{
+  from{opacity:0;transform:translate(-20%,4%) rotate(-3deg)}
+  to{opacity:1;transform:translate(0,0) rotate(0)}
+}
 
 .board{position:relative}
 .board .tile.selected{opacity:1;background:#fff3b5;border-color:#dfac29}
@@ -161,10 +167,11 @@ body[data-mode="watch"] .invite-card,body[data-mode="watch"] .hero,body[data-mod
 </style>
 </head>
 <body>
+<audio id="backgroundMusic" src="./media/dong-que.mp3" loop preload="metadata"></audio>
 <main class="shell"><div id="giftSky" class="gift-sky" aria-live="polite" aria-label="Hiệu ứng quà tặng thử"></div><div id="giftCredit" class="gift-credit hidden" aria-live="polite"><span id="giftFace" class="gift-face"></span><div class="gift-credit-text"><strong id="giftFrom">Nhân vật minh họa</strong><small id="giftMessage">Đang gửi quà</small></div><span class="gift-seal">✨</span></div>
  <header class="top">
   <div class="brand"><div class="logo">🍓</div><div><h1>FruitLink Vietnam</h1><small>LIÊN KẾT TRÁI CÂY</small></div></div>
-  <div class="actions"><button class="circle" id="soundBtn" title="Bật/tắt âm thanh" aria-label="Bật hoặc tắt âm thanh">🔊</button><button class="circle" id="restartBtn" title="Làm lại" aria-label="Chơi lại">↻</button></div>
+  <div class="actions"><button class="circle" id="soundBtn" title="Bật/tắt âm thanh" aria-label="Bật nhạc và tiếng hiệu ứng">🔈</button><button class="circle" id="restartBtn" title="Làm lại" aria-label="Chơi lại">↻</button></div>
  </header>
  <nav class="tabs" aria-label="Chế độ"><button id="playerTab" class="tab active">🎮 Người chơi</button><button id="watchTab" class="tab">👁️ Người xem</button></nav>
  <section class="hero"><h2 id="heroTitle">Mùa vui trái ngọt! 🌾</h2><p id="heroText">Ghép đúng 3 trái cây giống nhau, nhận điểm và vui cùng bạn bè.</p><div class="phase"><span class="pill" id="phaseLabel">🌱 Sẵn sàng</span><span class="clock" id="clock">20s</span></div><div class="ribbon"><span>🎵 Nhạc nhẹ &amp; tiếng ghép bộ ba</span><span>⏱️ 20s chuẩn bị</span><span>🍓 20s chơi · 15s nghỉ</span></div></section>
@@ -175,7 +182,7 @@ body[data-mode="watch"] .invite-card,body[data-mode="watch"] .hero,body[data-mod
   <div class="invite-top"><div><h3>🤝 Mời bạn chơi cùng</h3><p id="inviteHint">Mời bạn bè chơi cùng thử thách 49 ô để so điểm.</p></div><button id="inviteBtn" class="secondary" type="button">📨 Mời bạn</button></div>
   <div id="inviteDetails" class="invite-detail hidden"><div class="hint">Mã thử thách: <span class="invite-code" id="inviteCode"></span></div><input id="inviteLink" class="invite-link" readonly aria-label="Đường dẫn mời chơi" title="Đường dẫn mời bạn chơi"><div class="invite-controls"><button type="button" id="shareInviteBtn" class="secondary">📤 Gửi lời mời</button><button type="button" id="copyInviteBtn" class="secondary">📋 Sao chép link</button></div><p class="note">Hai người chơi cùng bố cục trái cây theo mã mời. Điểm số chưa đồng bộ trực tuyến giữa các máy.</p></div>
  </section>
- <section id="playerView" class="card"><div id="welcome"><h3>🌟 Sẵn sàng chơi nào!</h3><p class="hint">Mỗi lượt gồm <b>20 giây chuẩn bị · 20 giây chơi · 15 giây nghỉ.</b> Bàn 7 × 7 có lá cờ Việt Nam ở giữa và 48 trái cây xung quanh. Ghép 3 trái giống nhau được 1 điểm. Ghép đủ 16 bộ là về đích.</p><label for="name">Tên người chơi (không bắt buộc)</label><input id="name" class="input" maxlength="16" placeholder="Ví dụ: Nhà vườn vui" autocomplete="nickname"><button class="primary" id="startBtn">▶ Bắt đầu chơi thử</button><div class="info">🎵 Nhạc nền đồng quê có tiếng sáo và đàn gảy nhẹ. Ghép đúng 3 trái, bạn sẽ nghe tiếng cắn giòn rồi đến “Bing Bong” báo điểm.</div></div><div id="readyView" class="center hidden"><h3>🌾 Chuẩn bị vào vườn!</h3><p class="hint">Sắp đến lượt hái trái rồi!</p><div class="big">🎋🪈🍓</div><div id="bigClock" class="countbig">20</div><p class="hint">Sẵn sàng ghép ba trái cùng loại nhé.</p><button id="skipBtn" class="secondary">Vào chơi ngay</button></div><div id="gameView" class="hidden"><div id="board" class="board" role="group" aria-label="Bàn trái cây"></div><div id="prompt" class="prompt" aria-live="polite">Chạm 3 trái cùng loại để được +1 điểm!</div></div><div id="breakView" class="center hidden"><h3>🎉 Nghỉ 15 giây – Nhận quà!</h3><div class="big">🎁🍍🌺</div><div id="breakScore" style="font-size:22px;font-weight:800">Bạn được 0 điểm!</div><p class="hint">Người xem có thể thử gửi quà minh họa ở bên 👁️.</p><button id="nextBtn" class="secondary">Chuẩn bị vòng tiếp theo</button><button id="shareScoreBtn" class="secondary" type="button" style="display:block;width:100%;margin-top:10px">📤 Gửi kết quả cho bạn bè</button></div></section>
+ <section id="playerView" class="card"><div id="welcome"><h3>🌟 Sẵn sàng chơi nào!</h3><p class="hint">Mỗi lượt gồm <b>20 giây chuẩn bị · 20 giây chơi · 15 giây nghỉ.</b> Bàn 7 × 7 có lá cờ Việt Nam ở giữa và 48 trái cây xung quanh. Ghép 3 trái giống nhau được 1 điểm. Ghép đủ 16 bộ là về đích.</p><label for="name">Tên người chơi (không bắt buộc)</label><input id="name" class="input" maxlength="16" placeholder="Ví dụ: Nhà vườn vui" autocomplete="nickname"><button class="primary" id="startBtn">▶ Bắt đầu chơi thử</button><div class="info">🎵 Chạm nút loa để nghe nhạc đồng quê ngay tại đây, hoặc bấm “Bắt đầu chơi thử”. Ghép đúng 3 trái, bạn sẽ nghe tiếng cắn giòn rồi đến “Bing Bong” báo điểm.</div></div><div id="readyView" class="center hidden"><h3>🌾 Chuẩn bị vào vườn!</h3><p class="hint">Sắp đến lượt hái trái rồi!</p><div class="big">🎋🪈🍓</div><div id="bigClock" class="countbig">20</div><p class="hint">Sẵn sàng ghép ba trái cùng loại nhé.</p><button id="skipBtn" class="secondary">Vào chơi ngay</button></div><div id="gameView" class="hidden"><div id="board" class="board" role="group" aria-label="Bàn trái cây"></div><div id="prompt" class="prompt" aria-live="polite">Chạm 3 trái cùng loại để được +1 điểm!</div></div><div id="breakView" class="center hidden"><h3>🎉 Nghỉ 15 giây – Nhận quà!</h3><div class="big">🎁🍍🌺</div><div id="breakScore" style="font-size:22px;font-weight:800">Bạn được 0 điểm!</div><p class="hint">Người xem có thể thử gửi quà minh họa ở bên 👁️.</p><button id="nextBtn" class="secondary">Chuẩn bị vòng tiếp theo</button><button id="shareScoreBtn" class="secondary" type="button" style="display:block;width:100%;margin-top:10px">📤 Gửi kết quả cho bạn bè</button></div></section>
  <section id="watchView" class="card hidden" aria-label="Khán đài người xem">
    <div class="watch-status"><strong>Khán đài · Phòng 1</strong><span id="watchStatus">Sẵn sàng</span><b><span id="watchTime">20</span>s</b></div>
    <div id="recipientPanel">
@@ -254,6 +261,7 @@ body[data-mode="watch"] .invite-card,body[data-mode="watch"] .hero,body[data-mod
    const index=giftFigureIndex++%GIFT_FIGURES.length,figure=GIFT_FIGURES[index];
    const scene=document.createElement('div');scene.className='gift-scene'+(isTease?' gift-tease':'');
    const actor=document.createElement('span');actor.className='gift-actor';paintGiftPerson(actor,index);
+   actor.style.setProperty('--gift-motion','url(./media/gift-'+(index+1)+'.webp)');
    const parcel=document.createElement('span');parcel.className='gift-parcel';parcel.textContent='🎁';
    const treasure=document.createElement('span');treasure.className='gift-treasure';treasure.textContent=symbol;
    const caption=document.createElement('div');caption.className='gift-caption';caption.textContent=(isTease?'🌶️ Trêu vui: ':'✨ Quà tặng: ')+description+delivery+' · MÔ PHỎNG';
@@ -277,65 +285,24 @@ body[data-mode="watch"] .invite-card,body[data-mode="watch"] .hero,body[data-mod
  const challengeCode=receivedInvite?incomingChallenge:newChallengeCode();
  function inviteUrl(){const base=window.location.protocol==='file:'?'https://minhphuong1231239-cmyk.github.io/fruitlinkvietnam/':window.location.href;const url=new URL(base);url.searchParams.set('challenge',challengeCode);url.hash='';return url.toString()}
  function roundRandom(){let seed=2166136261;const source=challengeCode+':'+round;for(let i=0;i<source.length;i++)seed=Math.imul(seed^source.charCodeAt(i),16777619)>>>0;return()=>{seed=(seed+0x6D2B79F5)>>>0;let t=seed;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296}}
- let phase='home',mode='player',rank='phong',score=0,best=0,round=1,remaining=20,endAt=0,tickId=null,cells=[],selected=[],locked=false,name='Bạn',muted=false,ctx=null,musicTimer=null,noteStep=0,nextNoteAt=0,musicGain=null,effectGain=null;
+ let phase='home',mode='player',rank='phong',score=0,best=0,round=1,remaining=20,endAt=0,tickId=null,cells=[],selected=[],locked=false,name='Bạn',muted=false,ctx=null,effectGain=null;
  const load=(k,f)=>{try{let v=localStorage.getItem(k);return v===null?f:v}catch{return f}};
  const save=(k,v)=>{try{localStorage.setItem(k,String(v))}catch{}};
  best=Number(load('fruitlink.best.v2',0))||0;$('best').textContent=best;$('name').value=load('fruitlink.name','');
  function toast(message){document.querySelectorAll('.toast').forEach(x=>x.remove());let el=document.createElement('div');el.className='toast';el.textContent=message;document.body.appendChild(el);setTimeout(()=>el.remove(),1900)}
- function createAudio(){if(ctx)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;ctx=new C();musicGain=ctx.createGain();musicGain.gain.value=0;musicGain.connect(ctx.destination);effectGain=ctx.createGain();effectGain.gain.value=muted?0:1;effectGain.connect(ctx.destination)}catch{ctx=null}}
- function tone(freq,at,len,volume,type='sine',dest=musicGain){if(!ctx||muted)return;const osc=ctx.createOscillator(),env=ctx.createGain();osc.type=type;osc.frequency.setValueAtTime(freq,at);env.gain.setValueAtTime(.0001,at);env.gain.exponentialRampToValueAtTime(Math.max(.0002,volume),at+.027);env.gain.exponentialRampToValueAtTime(.0001,at+Math.max(.09,len));osc.connect(env);env.connect(dest||ctx.destination);osc.start(at);osc.stop(at+Math.max(.1,len)+.04)}
- // Eight bars in a pentatonic melody. Each entry is an eighth note, with space for the flute to breathe.
- const meadowTune=[
-   [392,0,440,494,0,0], [587,0,494,440,0,0],
-   [392,440,494,0,659,0], [587,0,0,0,0,0],
-   [494,0,587,659,0,0], [587,494,440,0,392,0],
-   [330,0,392,440,0,0], [392,0,0,0,0,0]
- ];
- const bassNotes=[196,147,196,147,165,147,131,196];
- const eighth=.33;
- function flute(freq,at,duration){
-   const reed=ctx.createOscillator(),breath=ctx.createGain();
-   reed.frequency.setValueAtTime(freq*.991,at);
-   reed.frequency.exponentialRampToValueAtTime(freq,at+.065);
-   breath.gain.setValueAtTime(.0001,at);
-   breath.gain.linearRampToValueAtTime(.19,at+.07);
-   breath.gain.linearRampToValueAtTime(.13,at+duration*.72);
-   breath.gain.exponentialRampToValueAtTime(.0001,at+duration);
-   reed.connect(breath);breath.connect(musicGain);
-   reed.start(at);reed.stop(at+duration+.01);
-   tone(freq*2,at+.02,duration*.9,.019,'sine');
+ function createAudio(){if(ctx)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;ctx=new C();effectGain=ctx.createGain();effectGain.gain.value=muted?0:1;effectGain.connect(ctx.destination)}catch{ctx=null}}
+ function tone(freq,at,len,volume,type='sine',dest=effectGain){if(!ctx||muted)return;const osc=ctx.createOscillator(),env=ctx.createGain();osc.type=type;osc.frequency.setValueAtTime(freq,at);env.gain.setValueAtTime(.0001,at);env.gain.exponentialRampToValueAtTime(Math.max(.0002,volume),at+.027);env.gain.exponentialRampToValueAtTime(.0001,at+Math.max(.09,len));osc.connect(env);env.connect(dest||ctx.destination);osc.start(at);osc.stop(at+Math.max(.1,len)+.04)}
+ const backgroundMusic=$('backgroundMusic');
+ let audioRequested=false;
+ function playBackground(){
+   if(!audioRequested||muted||document.hidden||!backgroundMusic.paused)return;
+   backgroundMusic.play().catch(updateSound);
  }
- function scheduleMusic(){
-   if(ctx.state!=='running'||document.hidden||muted||phase==='home')return;
-   const now=ctx.currentTime;
-   if(nextNoteAt<now)nextNoteAt=now+.015;
-   while(nextNoteAt<now+.15){
-     const bar=Math.floor(noteStep/6),beat=noteStep%6,notes=meadowTune[bar];
-     if(notes[beat]){
-       let length=1;
-       while(beat+length<6&&!notes[beat+length])length++;
-       flute(notes[beat],nextNoteAt,Math.min(1.16,length*eighth*.89));
-     }
-     if(beat===0||beat===4){
-       const pitch=bassNotes[bar]*(beat===0?1:1.5);
-       tone(pitch,nextNoteAt,.55,.092,'triangle');
-       tone(pitch*2,nextNoteAt,.25,.022,'sine');
-     }
-     noteStep=(noteStep+1)%(meadowTune.length*6);
-     nextNoteAt+=eighth;
-   }
- }
- function musicStart(){
-   if(muted||phase==='home'||document.hidden){musicStop();return}
-   createAudio();if(!ctx)return;
-   if(ctx.state!=='running'&&ctx.state!=='closed')ctx.resume().catch(()=>{});
-   if(musicTimer!==null)return;
-   musicGain.gain.value=.12;nextNoteAt=ctx.currentTime+.02;
-   scheduleMusic();musicTimer=setInterval(scheduleMusic,90);
- }
- function musicStop(){
-   clearInterval(musicTimer);musicTimer=null;
-   if(musicGain)musicGain.gain.value=0;
+ function enableAudio(){
+   audioRequested=true;
+   createAudio();
+   if(ctx&&ctx.state!=='running'&&ctx.state!=='closed')ctx.resume().catch(()=>{});
+   playBackground();
  }
  let biteBuffer;
  function makeBiteBuffer(){
@@ -406,9 +373,37 @@ body[data-mode="watch"] .invite-card,body[data-mode="watch"] .hero,body[data-mod
    env.gain.exponentialRampToValueAtTime(.0001,at+.145);
    ray.connect(env);env.connect(effectGain);ray.start(at);ray.stop(at+.15);
  }
- function updateSound(){$('soundBtn').textContent=muted?'🔇':'🔊';$('soundBtn').classList.toggle('off',muted);$('soundBtn').setAttribute('aria-label',muted?'Bật tất cả âm thanh':'Tắt tất cả âm thanh');if(ctx&&effectGain)effectGain.gain.value=muted?0:1}
- $('soundBtn').addEventListener('click',()=>{muted=!muted;createAudio();updateSound();if(muted)musicStop();else musicStart();toast(muted?'Đã tắt nhạc và tiếng hiệu ứng':'Đã bật nhạc nhẹ và tiếng trái cây 🔊')});
- document.addEventListener('visibilitychange',()=>{if(document.hidden)musicStop();else if(!muted&&phase!=='home')musicStart()});
+ function updateSound(){
+   const playing=!muted&&!backgroundMusic.paused;
+   const button=$('soundBtn');
+   button.textContent=playing?'🔊':muted?'🔇':'🔈';
+   button.classList.toggle('off',!playing);
+   button.setAttribute('aria-pressed',String(playing));
+   button.setAttribute('aria-label',playing?'Tắt nhạc và tiếng hiệu ứng':'Bật nhạc và tiếng hiệu ứng');
+   button.title=button.getAttribute('aria-label');
+   if(effectGain)effectGain.gain.value=muted?0:1;
+ }
+ backgroundMusic.addEventListener('playing',updateSound);
+ backgroundMusic.addEventListener('pause',updateSound);
+ backgroundMusic.addEventListener('error',updateSound);
+ $('soundBtn').addEventListener('click',()=>{
+   muted=!backgroundMusic.paused&&!muted;
+   if(muted){
+     backgroundMusic.pause();
+     if(window.speechSynthesis)window.speechSynthesis.cancel();
+   }else enableAudio();
+   updateSound();
+ });
+ // Begin playback within the same trusted tap, including in the spectator lobby.
+ document.addEventListener('click',event=>{
+   if(!muted&&!$('soundBtn').contains(event.target))enableAudio();
+ },true);
+ document.addEventListener('visibilitychange',()=>{
+   if(document.hidden)backgroundMusic.pause();
+   else playBackground();
+ });
+ window.addEventListener('pagehide',()=>backgroundMusic.pause());
+ window.addEventListener('pageshow',playBackground);
  function setMode(m){mode=m;$('playerTab').classList.toggle('active',m==='player');$('watchTab').classList.toggle('active',m==='watch');$('playerView').classList.toggle('hidden',m!=='player');$('watchView').classList.toggle('hidden',m!=='watch');document.body.dataset.mode=m;if(m==='watch')renderSeats();requestAnimationFrame(fitBoard)}
  $('playerTab').addEventListener('click',()=>setMode('player'));
  $('watchTab').addEventListener('click',()=>setMode('watch'));
@@ -495,10 +490,10 @@ body[data-mode="watch"] .invite-card,body[data-mode="watch"] .hero,body[data-mod
  }
  function pick(i){if(phase!=='play'||locked||score===GROUPS_PER_BOARD||!cells[i]||selected.includes(i))return;createAudio();if(ctx&&!muted&&ctx.state!=='running'&&ctx.state!=='closed')ctx.resume().catch(()=>{});selected.push(i);playRay();drawBoard();if(selected.length<3){$('prompt').textContent='Đã chọn '+selected.length+'/3 trái • tìm cùng loại nhé';return}const activeCells=cells;let triple=[...selected];let win=triple.every(x=>cells[x]===cells[triple[0]]);locked=true;if(win){$('board').querySelector('.fruit-links')?.classList.add('linked');score+=1;const finishedNow=score===GROUPS_PER_BOARD;if(finishedNow)registerFinish('you');best=Math.max(totalYou(),best);save('fruitlink.best.v2',best);$('prompt').textContent='🎉 Bing Bong! +1 điểm, ba trái biến mất';playMatchSound();updateText();triple.forEach(j=>boardTile(j,'matched'));setTimeout(()=>{if(cells!==activeCells)return;triple.forEach(j=>cells[j]=null);selected=[];locked=false;drawBoard();if(finishedNow)$('prompt').textContent='🏆 Đủ 16 bộ ba! Thưởng về đích: +'+bonusYou+' điểm'},320)}else{$('prompt').textContent='Ba trái chưa giống nhau. Các trái sẽ hiện lại!';triple.forEach(j=>boardTile(j,'wrong'));setTimeout(()=>{if(cells!==activeCells)return;selected=[];locked=false;drawBoard()},220)}}
  function boardTile(i,cls){$('board').children[i]?.classList.add(cls)}
- function begin(p){phase=p;remaining=DUR[p];endAt=Date.now()+remaining*1000;if(p==='ready'){score=0;bots=Array(9).fill(0);bonusYou=0;bonusBots=Array(9).fill(0);finishOrder=[];roundSaved=false;botTicks=0;lastBotSecond=-1;initCells();$('prompt').textContent='Chạm 3 trái giống nhau để được +1 điểm!';}if(p==='play'){drawBoard()}if(p==='break'){recordRound();save('fruitlink.best.v2',best);$('breakScore').textContent=name+' được '+totalYou()+' điểm (trong đó thưởng về đích '+bonusYou+')!';}showPhase();musicStart()}
+ function begin(p){phase=p;remaining=DUR[p];endAt=Date.now()+remaining*1000;if(p==='ready'){score=0;bots=Array(9).fill(0);bonusYou=0;bonusBots=Array(9).fill(0);finishOrder=[];roundSaved=false;botTicks=0;lastBotSecond=-1;initCells();$('prompt').textContent='Chạm 3 trái giống nhau để được +1 điểm!';}if(p==='play'){drawBoard()}if(p==='break'){recordRound();save('fruitlink.best.v2',best);$('breakScore').textContent=name+' được '+totalYou()+' điểm (trong đó thưởng về đích '+bonusYou+')!';}showPhase()}
  function next(){if(phase==='ready'){begin('play');return}if(phase==='play'){begin('break');return}if(phase==='break'){round++;begin('ready');return}}
- function stop(){clearInterval(tickId);tickId=null;musicStop();phase='home';remaining=20;score=0;round=1;showPhase();setMode('player')}
- function start(){name=($('name').value||'Bạn').trim().slice(0,16)||'Bạn';save('fruitlink.name',$('name').value);createAudio();if(ctx)ctx.resume().catch(()=>{});if(tickId)clearInterval(tickId);round=1;begin('ready');tickId=setInterval(()=>{if(phase==='home')return;let newRemaining=Math.max(0,Math.ceil((endAt-Date.now())/1000));if(newRemaining!==remaining){remaining=newRemaining;updateText()}if(phase==='play'&&remaining>0&&remaining<DUR.play&&remaining!==lastBotSecond){lastBotSecond=remaining;advanceBots()}if(Date.now()>=endAt)next()},120)}
+ function stop(){clearInterval(tickId);tickId=null;phase='home';remaining=20;score=0;round=1;showPhase();setMode('player')}
+ function start(){name=($('name').value||'Bạn').trim().slice(0,16)||'Bạn';save('fruitlink.name',$('name').value);if(tickId)clearInterval(tickId);round=1;begin('ready');tickId=setInterval(()=>{if(phase==='home')return;let newRemaining=Math.max(0,Math.ceil((endAt-Date.now())/1000));if(newRemaining!==remaining){remaining=newRemaining;updateText()}if(phase==='play'&&remaining>0&&remaining<DUR.play&&remaining!==lastBotSecond){lastBotSecond=remaining;advanceBots()}if(Date.now()>=endAt)next()},120)}
  $('startBtn').addEventListener('click',start);$('restartBtn').addEventListener('click',()=>{stop();toast('Đã trở về màn hình bắt đầu')});$('skipBtn').addEventListener('click',()=>phase==='ready'&&begin('play'));$('nextBtn').addEventListener('click',()=>{if(phase==='break'){round++;begin('ready')}});
  let recipientSeat=null, giftCategory=0;
  function playerAt(seat){return seat===0?name:BOT_NAMES[seat-1]}
@@ -546,10 +541,9 @@ body[data-mode="watch"] .invite-card,body[data-mode="watch"] .hero,body[data-mod
  function sendGift(g){
    if(recipientSeat===null)return;
    const recipient=playerAt(recipientSeat);
-   createAudio();if(ctx)ctx.resume().catch(()=>{});
    showGiftDemo(g[0],g[1],g[2]==='tease',recipient);
    if(ctx&&!muted&&phase!=='play'){
-     const now=ctx.currentTime;[784,988,1175].forEach((f,i)=>tone(f,now+i*.08,.25,.09,'sine',ctx.destination));
+     const now=ctx.currentTime;[784,988,1175].forEach((f,i)=>tone(f,now+i*.08,.25,.09,'sine',effectGain));
    }
  }
  showPhase();renderLocalTotals();updateSound();

@@ -43,6 +43,8 @@ body{overflow:hidden}
 .invite-top button{padding:5px 7px;font-size:11px;border-radius:8px}
 .invite-detail{position:absolute;z-index:10;top:70px;left:10px;right:10px;padding:12px;background:#fff;box-shadow:0 8px 35px #17412d55;border-radius:12px}
 .invite-link{margin:5px 0;padding:8px}
+.invite-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.invite-heading .hint{margin:0}
 .card{padding:6px 7px;border-radius:12px;min-height:0}
 #playerView,#watchView{flex:1;min-height:0;overflow:hidden}
 #gameView{height:100%;min-height:0;display:flex;flex-direction:column;align-items:stretch}
@@ -179,8 +181,8 @@ body[data-mode="watch"] .invite-card,body[data-mode="watch"] .hero,body[data-mod
  <section class="room-strip" aria-label="Thông tin phòng chơi thử"><span><strong>🏠 Phòng 1</strong> · 1 người + 9 máy mẫu</span><span>👁️ 0 trực tuyến</span><button type="button" id="demoGiftBtn" class="secondary">🎁 Thử quà</button></section>
 
  <section class="invite-card" aria-label="Mời bạn chơi">
-  <div class="invite-top"><div><h3>🤝 Mời bạn chơi cùng</h3><p id="inviteHint">Mời bạn bè chơi cùng thử thách 49 ô để so điểm.</p></div><button id="inviteBtn" class="secondary" type="button">📨 Mời bạn</button></div>
-  <div id="inviteDetails" class="invite-detail hidden"><div class="hint">Mã thử thách: <span class="invite-code" id="inviteCode"></span></div><input id="inviteLink" class="invite-link" readonly aria-label="Đường dẫn mời chơi" title="Đường dẫn mời bạn chơi"><div class="invite-controls"><button type="button" id="shareInviteBtn" class="secondary">📤 Gửi lời mời</button><button type="button" id="copyInviteBtn" class="secondary">📋 Sao chép link</button></div><p class="note">Hai người chơi cùng bố cục trái cây theo mã mời. Điểm số chưa đồng bộ trực tuyến giữa các máy.</p></div>
+  <div class="invite-top"><div><h3>🤝 Mời bạn chơi cùng</h3><p id="inviteHint">Mời bạn bè chơi cùng thử thách 49 ô để so điểm.</p></div><button id="inviteBtn" aria-expanded="false" aria-controls="inviteDetails" class="secondary" type="button">📨 Mời bạn</button></div>
+  <div id="inviteDetails" class="invite-detail hidden"><div class="invite-heading"><div class="hint">Mã thử thách: <span class="invite-code" id="inviteCode"></span></div><button id="closeInviteBtn" type="button" class="secondary">Đóng</button></div><input id="inviteLink" class="invite-link" readonly aria-label="Đường dẫn mời chơi" title="Đường dẫn mời bạn chơi"><div class="invite-controls"><button type="button" id="shareInviteBtn" class="secondary">📤 Gửi lời mời</button><button type="button" id="copyInviteBtn" class="secondary">📋 Sao chép link</button></div><p class="note">Hai người chơi cùng bố cục trái cây theo mã mời. Điểm số chưa đồng bộ trực tuyến giữa các máy.</p></div>
  </section>
  <section id="playerView" class="card"><div id="welcome"><h3>🌟 Sẵn sàng chơi nào!</h3><p class="hint">Mỗi lượt gồm <b>20 giây chuẩn bị · 20 giây chơi · 15 giây nghỉ.</b> Bàn 7 × 7 có lá cờ Việt Nam ở giữa và 48 trái cây xung quanh. Ghép 3 trái giống nhau được 1 điểm. Ghép đủ 16 bộ là về đích.</p><label for="name">Tên người chơi (không bắt buộc)</label><input id="name" class="input" maxlength="16" placeholder="Ví dụ: Nhà vườn vui" autocomplete="nickname"><button class="primary" id="startBtn">▶ Bắt đầu chơi thử</button><div class="info">🎵 Chạm nút loa để nghe nhạc đồng quê ngay tại đây, hoặc bấm “Bắt đầu chơi thử”. Ghép đúng 3 trái, bạn sẽ nghe tiếng cắn giòn rồi đến “Bing Bong” báo điểm.</div></div><div id="readyView" class="center hidden"><h3>🌾 Chuẩn bị vào vườn!</h3><p class="hint">Sắp đến lượt hái trái rồi!</p><div class="big">🎋🪈🍓</div><div id="bigClock" class="countbig">20</div><p class="hint">Sẵn sàng ghép ba trái cùng loại nhé.</p><button id="skipBtn" class="secondary">Vào chơi ngay</button></div><div id="gameView" class="hidden"><div id="board" class="board" role="group" aria-label="Bàn trái cây"></div><div id="prompt" class="prompt" aria-live="polite">Chạm 3 trái cùng loại để được +1 điểm!</div></div><div id="breakView" class="center hidden"><h3>🎉 Nghỉ 15 giây – Nhận quà!</h3><div class="big">🎁🍍🌺</div><div id="breakScore" style="font-size:22px;font-weight:800">Bạn được 0 điểm!</div><p class="hint">Người xem có thể thử gửi quà minh họa ở bên 👁️.</p><button id="nextBtn" class="secondary">Chuẩn bị vòng tiếp theo</button><button id="shareScoreBtn" class="secondary" type="button" style="display:block;width:100%;margin-top:10px">📤 Gửi kết quả cho bạn bè</button></div></section>
  <section id="watchView" class="card hidden" aria-label="Khán đài người xem">
@@ -378,17 +380,44 @@ body[data-mode="watch"] .invite-card,body[data-mode="watch"] .hero,body[data-mod
  });
  window.addEventListener('pagehide',()=>backgroundMusic.pause());
  window.addEventListener('pageshow',playBackground);
- function setMode(m){mode=m;$('playerTab').classList.toggle('active',m==='player');$('watchTab').classList.toggle('active',m==='watch');$('playerView').classList.toggle('hidden',m!=='player');$('watchView').classList.toggle('hidden',m!=='watch');document.body.dataset.mode=m;if(m==='watch')renderSeats();requestAnimationFrame(fitBoard)}
+ function setMode(m){setInviteOpen(false);mode=m;$('playerTab').classList.toggle('active',m==='player');$('watchTab').classList.toggle('active',m==='watch');$('playerView').classList.toggle('hidden',m!=='player');$('watchView').classList.toggle('hidden',m!=='watch');document.body.dataset.mode=m;if(m==='watch')renderSeats();requestAnimationFrame(fitBoard)}
  $('playerTab').addEventListener('click',()=>setMode('player'));
  $('watchTab').addEventListener('click',()=>setMode('watch'));
- function openInvite(){$('inviteCode').textContent=challengeCode;$('inviteLink').value=inviteUrl();$('inviteDetails').classList.remove('hidden')}
+ function setInviteOpen(open){
+   if(open){
+     $('inviteCode').textContent=challengeCode;
+     $('inviteLink').value=inviteUrl();
+   }
+   $('inviteDetails').classList.toggle('hidden',!open);
+   $('inviteBtn').setAttribute('aria-expanded',String(open));
+ }
+ function closeInviteFromPanel(){
+   setInviteOpen(false);
+   $('inviteBtn').focus({preventScroll:true});
+ }
  async function copyText(content){try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(content);return true}}catch{}const el=document.createElement('textarea');el.value=content;el.style.position='fixed';el.style.left='-9999px';document.body.appendChild(el);el.focus();el.select();let ok=false;try{ok=document.execCommand('copy')}catch{}el.remove();return ok}
- async function sendShare(message,url){if(navigator.share){try{await navigator.share({title:'FruitLink Vietnam – Liên Kết Trái Cây',text:message,url});return}catch(err){if(err&&err.name==='AbortError')return}}const copied=await copyText(message+'\n'+url);toast(copied?'Đã sao chép lời mời, bạn có thể dán vào Zalo hoặc Messenger':'Hãy chạm giữ đường dẫn để sao chép');if(!copied){openInvite();$('inviteLink').focus();$('inviteLink').select()}}
- $('inviteBtn').addEventListener('click',()=>{openInvite();toast('Chọn Gửi lời mời để rủ bạn bè cùng chơi!')});
+ async function sendShare(message,url){
+   if(navigator.share){
+     try{
+       await navigator.share({title:'FruitLink Vietnam – Liên Kết Trái Cây',text:message,url});
+       setInviteOpen(false);
+       return;
+     }catch(err){if(err&&err.name==='AbortError')return}
+   }
+   const copied=await copyText(message+'\n'+url);
+   setInviteOpen(!copied);
+   toast(copied?'Đã sao chép lời mời, bạn có thể dán vào Zalo hoặc Messenger':'Hãy chạm giữ đường dẫn để sao chép');
+   if(!copied){$('inviteLink').focus();$('inviteLink').select()}
+ }
+ $('inviteBtn').addEventListener('click',()=>setInviteOpen($('inviteDetails').classList.contains('hidden')));
+ $('closeInviteBtn').addEventListener('click',closeInviteFromPanel);
+ document.addEventListener('keydown',event=>{
+   if(event.key==='Escape'&&!$('inviteDetails').classList.contains('hidden'))closeInviteFromPanel();
+ });
  $('shareInviteBtn').addEventListener('click',()=>sendShare('🍓 Mời bạn chơi FruitLink Vietnam! Mã thử thách '+challengeCode+'. Cùng bàn 7 × 7 với 48 trái cây trong 20 giây, xem ai ghi nhiều điểm hơn nhé!',inviteUrl()));
- $('copyInviteBtn').addEventListener('click',async()=>{openInvite();const copied=await copyText(inviteUrl());if(!copied){$('inviteLink').focus();$('inviteLink').select()}toast(copied?'Đã sao chép đường dẫn mời chơi!':'Chạm giữ đường dẫn để sao chép nhé')});
+ $('copyInviteBtn').addEventListener('click',async()=>{const copied=await copyText(inviteUrl());setInviteOpen(!copied);if(!copied){$('inviteLink').focus();$('inviteLink').select()}toast(copied?'Đã sao chép đường dẫn mời chơi!':'Chạm giữ đường dẫn để sao chép nhé')});
  $('shareScoreBtn').addEventListener('click',()=>sendShare('🏆 Mình vừa đạt '+totalYou()+' điểm ở vòng '+round+' của FruitLink Vietnam! Bạn vào cùng thử thách '+challengeCode+' để so tài nhé!',inviteUrl()));
- if(receivedInvite){$('inviteHint').textContent='🎉 Bạn được mời vào thử thách '+challengeCode+'! Chơi cùng bảng 49 ô và so điểm với bạn bè.';$('inviteBtn').textContent='Xem mã mời';openInvite()}
+ if(receivedInvite){$('inviteHint').textContent='🎉 Bạn được mời vào thử thách '+challengeCode+'! Chơi cùng bảng 49 ô và so điểm với bạn bè.';$('inviteBtn').textContent='Xem mã mời'}
  function updateText(){const label={home:'🌱 Sẵn sàng',ready:'🎋 Chuẩn bị',play:'🍓 Đang chơi',break:'🎁 Nghỉ / Tặng quà'};$('phaseLabel').textContent=label[phase];$('clock').textContent=remaining+'s';$('bigClock').textContent=remaining;$('watchTime').textContent=remaining;$('score').textContent=totalYou();$('best').textContent=best;$('round').textContent=round;$('watchStatus').textContent=label[phase].replace(/^\S+ /,'');$('heroTitle').textContent=phase==='play'?'Nhanh tay hái trái! 🍓':phase==='break'?'Cùng vui nhận quà! 🎁':phase==='ready'?'Sẵn sàng vào vườn! 🌾':'Mùa vui trái ngọt! 🌾';$('heroText').textContent=phase==='play'?'Chạm đúng ba trái cùng loại để ghi +1 điểm.':phase==='break'?'Nghỉ 15 giây, xem bảng điểm và quà tặng vui.':phase==='ready'?'Đếm ngược 20 giây để vào cuộc!':'Ghép đúng 3 trái cây giống nhau, nhận điểm và vui cùng bạn bè.'}
  function fitBoard(){
   const board=$('board'),shell=document.querySelector('.shell'),game=$('gameView'),sky=$('giftSky');
@@ -401,7 +430,7 @@ body[data-mode="watch"] .invite-card,body[data-mode="watch"] .hero,body[data-mod
    sky.style.height=Math.max(50,Math.floor(board.getBoundingClientRect().top-shell.getBoundingClientRect().top-2))+'px';
   }else sky.style.height='160px';
  }
- function showPhase(){['welcome','readyView','gameView','breakView'].forEach(id=>$(id).classList.toggle('hidden', ({home:'welcome',ready:'readyView',play:'gameView',break:'breakView'})[phase]!==id));document.body.dataset.phase=phase;updateText();requestAnimationFrame(fitBoard)}
+ function showPhase(){setInviteOpen(false);['welcome','readyView','gameView','breakView'].forEach(id=>$(id).classList.toggle('hidden', ({home:'welcome',ready:'readyView',play:'gameView',break:'breakView'})[phase]!==id));document.body.dataset.phase=phase;updateText();requestAnimationFrame(fitBoard)}
  window.addEventListener('resize',()=>requestAnimationFrame(fitBoard));
  function initCells(){
    const random=roundRandom();
